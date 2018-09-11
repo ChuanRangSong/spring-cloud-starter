@@ -8,9 +8,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableEurekaClient
 @SpringBootApplication
-public class UserApplication {
+public class UserServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UserApplication.class, args);
+        SpringApplication.run(UserServiceApplication.class, args);
     }
 }
