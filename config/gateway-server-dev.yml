@@ -10,10 +10,10 @@ zuul:
       enabled: true
   routes:
     user-service:
-      path: /userapi/**
+      path: /user/**
       serviceId: user-service
       sensitiveHeaders:
     order-service:
-      path: /orderapi/**
+      path: /order/**
       serviceId: order-service
       sensitiveHeaders:
