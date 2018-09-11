@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.alibaba</groupId>
-    <artifactId>user</artifactId>
+    <artifactId>user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -13,7 +13,7 @@
 
     <parent>
         <groupId>com.alibaba</groupId>
-        <artifactId>spring-cloud-starter-parent</artifactId>
+        <artifactId>spring-cloud-starter-service</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>

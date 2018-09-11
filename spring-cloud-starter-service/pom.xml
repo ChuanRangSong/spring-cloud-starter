@@ -4,21 +4,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.alibaba</groupId>
-    <artifactId>spring-cloud-starter-parent</artifactId>
+    <artifactId>spring-cloud-starter-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <modules>
-        <module>spring-cloud-starter-server</module>
-        <module>spring-cloud-starter-service</module>
-    </modules>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
-    <name>spring-cloud-starter</name>
+    <name>order-service</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.4.RELEASE</version>
+        <groupId>com.alibaba</groupId>
+        <artifactId>spring-cloud-starter-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 

@@ -13,7 +13,7 @@
 
     <parent>
         <groupId>com.alibaba</groupId>
-        <artifactId>spring-cloud-starter-parent</artifactId>
+        <artifactId>spring-cloud-starter-server</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>

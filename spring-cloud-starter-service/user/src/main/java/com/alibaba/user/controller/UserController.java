@@ -12,7 +12,7 @@ public class UserController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping("/{id}")
-    public void findById(@PathVariable("id") int id){
+    public void findById(@PathVariable("id") int id) {
         logger.info("id:{}", id);
     }
 
