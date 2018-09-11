@@ -16,4 +16,4 @@ spring:
           password: scr19910419
           search-paths: config
   application:
-    name: config.server
+    name: config-server
