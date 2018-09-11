@@ -11,9 +11,9 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/ChuanRangSong/config
+          uri: https://github.com/ChuanRangSong/spring-cloud-starter
           username: scr0419@outlook.com
           password: scr19910419
-          search-paths: spring-cloud-starter
+          search-paths: config
   application:
-    name: config-server
+    name: config.server
