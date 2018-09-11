@@ -1,0 +1,19 @@
+server:
+  port: 0
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9761/eureka/
+
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/ChuanRangSong/config
+          username: scr0419@outlook.com
+          password: scr19910419
+          search-paths: spring-cloud-starter
+  application:
+    name: config-server
