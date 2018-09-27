@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>详情页面</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/jquery.min.js"></script>
+    <script src="layui/layui.js"></script>
+    <script type="text/javascript" src="layui/common.js"></script>
+</head>
+<style>
+    tr td:nth-child(2) {
+        color: #afafaf;
+    }
+</style>
+<body>
+<a class="layui-btn config-from-data">表单框</a>
+<!-- 配置表单信息 -->
+<div id="addFormData" class="layui-form" style="height: 100%;overflow:hidden !important;">
+    <div align="center"><h2>表单展示配置</h2></div>
+    <table class="layui-table">
+        <tr>
+            <td>表单编码：</td>
+            <td><input type="text" placeholder="表单编码" class="layui-input" id="form-data-code"></td>
+        </tr>
+        <tr>
+            <td>表单说明：</td>
+            <td><input type="text" placeholder="表单说明" class="layui-input" id="form-data-explain"></td>
+        </tr>
+        <tr>
+            <td>是否可编辑：</td>
+            <td>
+                <select id="form-data-isEdit" name="return-reason" lay-filter="form-data-isEdit">
+                    <option value="1">可编辑</option>
+                    <option value="0">不可编辑</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>数据来源第几步操作：</td>
+            <td><input type="text" placeholder="数据来源第几步操作" class="layui-input" id="form-data-sort"></td>
+        </tr>
+        <tr>
+            <td>是否展示</td>
+            <td>
+                <select id="form-data-isShow">
+                    <option value="0">是</option>
+                    <option value="1">否</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <div align="center"><h2>表单构成配置</h2></div>
+    <div>
+        <textarea class="layui-textarea" rows="10" cols="100" placeholder="输入表单html代码" id="htmlTextarea" style="display: inline-block;width: 40%;"></textarea>
+        <div id="htmlDiv" style="display: inline-block;width: 58%;">
+
+        </div>
+    </div>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        //各种基于事件的操作，下面会有进一步介绍
+        form.on('select(chufa)', function (data) {
+            $('#demonstrationBtn1 .chufa').text($('#chufa').val() == 1 ? '用户触发' : '系统触发')
+        });
+        form.on('select(fasongtongzhi)', function (data) {
+            $('#demonstrationBtn1 .fasongtongzhi').text($('#fasongtongzhi').val() == 1 ? '否' : '是')
+        });
+        form.on('select(weituo)', function (data) {
+            $('#demonstrationBtn1 .weituo').text($("#weituo").val() == 0 ? '是' : '否')
+        });
+    });
+    $("#htmlTextarea").change(function () {
+        $("#htmlDiv").empty();
+        $("#htmlDiv").html($(this).val());
+        layui.use('form', function () {
+            var formObj = layui.form;
+            formObj.render();
+        });
+    });
+    $(".config-from-data").click(function () {
+        var clickObj = this;
+        layer.open({
+            type: 1,
+            resize: false,
+            title: "配置表单数据",
+            area: ['90%', "90%"],
+            content: $("#addFormData"), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            btn: ['确定', '取消'],
+            yes: function (index) {
+            },
+            cancel: function () {
+            }
+        });
+    });
+</script>
+</body>
+
+</html>
