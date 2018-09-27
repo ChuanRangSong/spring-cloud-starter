@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>表单元素类型</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/jquery.min.js"></script>
+    <script src="layui/layui.js"></script>
+    <script type="text/javascript" src="layui/common.js"></script>
+</head>
+<style>
+    
+</style>
+<body>
+<div class="layui-form" id="form-element-type-list" style="height: 100%;overflow:hidden !important;">
+    <div align="center"><h2>表单元素类型展示</h2></div>
+    <table class="layui-table">
+        <tr class='form-element-type-title'>
+            <td>类型unique code</td>
+            <td>名称</td>
+            <td>h5片段</td>
+			<td>操作</td>
+        </tr>
+    </table>
+	<div class="layui-container">
+	  <div class="layui-col-md4 layui-col-md-offset4">
+		  <a class="layui-btn" id="formElementTypeAddBtn" >增加</a>
+	  </div>
+	</div>
+</div>
+<div id="formElementTypeEdit" class="layui-form" style="display: none;height: 90%;">
+	<div style="padding: 10px;padding-left: 100px;">
+		<table class="layui-table">
+			<tr class='form-element-type-title'>
+				<td>类型unique code:</td>
+				<td><input type="text" placeholder="类型unique code" class="layui-input" id="recordUniqueCode" readonly="readonly"></td>
+			</tr>
+			<tr>
+				<td>名称</td>
+				<td><input type="text" placeholder="name" class="layui-input" id="name"></td>
+			</tr>
+			<tr>
+				<td>h5片段</td>
+				<td>
+					<div class="layui-input-block">
+						<textarea id="h5Paragraph" placeholder="h5片段" class="layui-textarea"></textarea>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="addFormElementType" class="layui-form" style="display: none;height: 90%;">
+	<div style="padding: 10px;padding-left: 100px;">
+		<table class="layui-table">
+			<tr>
+				<td>名称</td>
+				<td><input type="text" placeholder="元素类型名" class="layui-input" id="name_add"></td>
+			</tr>
+			<tr>
+				<td>h5片段</td>
+				<td>
+					<div class="layui-input-block">
+						<textarea  id="addH5Paragraph" placeholder="h5片段" class="layui-textarea"></textarea>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<script>
+    layui.use(['form', 'code'], function () {
+        
+    });
+	
+	$.ajax({
+		type: "post",
+		url: baseUrl + "/approvalFormElementType/list",
+		dataType: "json",
+		success: function(data) {
+			$.each(data.data, function(index, formElementType){
+				$("#form-element-type-list table tbody").append(
+					"<tr>" +
+					"<td>" + formElementType.recordUniqueCode + "</td>"+
+					"<td>" + formElementType.name + "</td>"+
+					"<td>"+
+						"<div class='layui-input-block'>"+
+							'<textarea placeholder="请输入内容" class="layui-textarea" readonly="readonly">' + formElementType.h5Paragraph + '</textarea>'+
+						'</div>'+
+					'</td>'+
+					"<td>"+
+						"<a class='layui-btn form-element-type-edit-btn' recordUniqueCode='" + formElementType.recordUniqueCode + "'>编辑</a>"+
+						"<a class='layui-btn form-element-type-delete-btn' name='" + formElementType.name + "' recordUniqueCode='" + formElementType.recordUniqueCode + "'>删除</a>"+
+					"</td>" +
+					"</tr>"
+				);
+			});
+
+			$(".form-element-type-edit-btn").unbind("click");
+			$(".form-element-type-edit-btn").click(function(){
+				$.ajax({
+					type: "post",
+					url: baseUrl + "/approvalFormElementType/findByUniqueCode",
+					dataType: "json",
+					data:{"recordUniqueCode":$(this).attr("recordUniqueCode")},
+					success: function(data) {
+						var formElementType = data.data;
+						$("#recordUniqueCode").val(formElementType.recordUniqueCode);
+						$("#name").val(formElementType.name);
+						$("#h5Paragraph").val(formElementType.h5Paragraph);
+						layer.open({
+							type: 1,
+							area: ['90%', "90%"],
+							content: $('#formElementTypeEdit'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响,
+							btn: ['确定', '取消'],
+							yes: function(index){
+								if (index == 1){
+									$.ajax({
+										type: "post",
+										url: baseUrl + "/approvalFormElementType/edit",
+										dataType: "json",
+										data:{"recordUniqueCode":$("#recordUniqueCode").val(), "name":$("#name").val(), "h5Paragraph":$("#h5Paragraph").val()},
+										success: function(data) {
+											window.location.reload();
+										}
+									});
+								} 
+							}
+						});
+					}
+				});
+			});
+			$(".form-element-type-delete-btn").unbind("click");
+			$(".form-element-type-delete-btn").click(function(){
+				var recordUniqueCode = $(this).attr("recordUniqueCode");
+				layer.open({
+					type: 1,
+					title:"提示",
+					// area: ['40%', "40%"],
+					content: '<div align="center"><h2>你确定删除{'+ $(this).attr("name") +'}吗？</h2></div>', //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响,
+					btn: ['确定', '取消'],
+					yes: function(index){
+						if (index == 1){
+							$.ajax({
+								type: "post",
+								url: baseUrl + "/approvalFormElementType/delete",
+								dataType: "json",
+								data:{"recordUniqueCode":recordUniqueCode},
+								success: function(data) {
+									window.location.reload();
+								}
+							});
+						}
+					},
+				});
+			});
+		},
+	});
+	$("#formElementTypeAddBtn").click(function(){
+		layer.open({
+			type: 1,
+			area: ['90%', "90%"],
+			content: $('#addFormElementType'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响,
+			btn: ['确定', '取消'],
+			yes: function(index){
+				$.ajax({
+					type: "post",
+					url: baseUrl + "/approvalFormElementType/add",
+					dataType: "json",
+					data:{"name":$("#name_add").val(), "h5Paragraph":$("#addH5Paragraph").val()},
+					success: function(data) {
+						window.location.reload();
+					}
+				});
+			}
+		});
+	});
+</script>
+</body>
+
+</html>

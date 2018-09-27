@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>详情页面</title>
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<script src="layui/jquery.min.js"></script>
+		<script src="layui/layui.js"></script>
+		<script type="text/javascript" src="layui/common.js"></script>
+	</head>
+	<style>
+		tr td:nth-child(2) {
+			color: #afafaf;
+		}
+		
+		.childDiv,
+		.msg-div,
+		.exe-div {
+			display: inline-block;
+		}
+		
+		.send-msg-role,
+		.exe-role,
+		.add-option,
+		.recommended-role {
+			display: inline-block;
+		}
+		
+		.send-msg-role,
+		.exe-role,
+		.add-option,
+		.recommended-role {
+			width: auto;
+		}
+	</style>
+
+	<body class="layui-layout-body" style="overflow: auto">
+		<div style="padding: 10px;margin-bottom: 50px;" align="center">
+			<table id="titleTable" class="layui-table layui-form" style="width: 600px">
+				<tr>
+					<td>审批流名称</td>
+					<td id=""> <input type="text" name="shipimingcheng" id="approvalFlowName" value="" class="layui-input" /></td>
+				</tr>
+				<tr>
+					<td>审批流版本</td>
+					<td id="approvalFlowVersion">1</td>
+				</tr>
+				<tr>
+					<td>审批流编号</td>
+					<td id="approvalFlowNum"></td>
+				</tr>
+				<tr>
+					<td>h5链接描述</td>
+					<td> <input type="text" name="" id="h5Resume" value="" class="layui-input"/></td>
+				</tr>
+				<tr>
+					<td>h5链接地址</td>
+					<td> <input type="text" name="" id="h5Link" value=""  class="layui-input"/></td>
+				</tr>
+				<tr>
+					<td>公司编号</td>
+					<td><input type="text" name="" id="companyNum" value=""  class="layui-input"/></td>
+				</tr>
+				<tr>
+					<td>审批流类型</td>
+					<td>
+						<select id="type">
+							<option value="1">h5</option>
+							<option value="2">原生</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<button class="layui-btn" id="fasong" style="width: 200px;">保存</button>
+		</div>
+		<script>
+			layui.use('form', function() {
+				var form = layui.form;
+            });
+			$('#fasong').click(function() {
+				var data = new Array();
+				var createUserId = "1111";
+				var jsonData = JSON.stringify(
+                    {
+                        "approvalFlowName": $('#approvalFlowName').val(),
+                        "approvalFlowNum": $('#approvalFlowNum').text(),
+                        "createTime": "2018-08-14T02:01:12.764Z",
+                        "createUserId": createUserId,
+                        "effectiveTime": "2018-08-14T02:01:12.764Z",
+                        "h5Link": $('#h5Link').val(),
+                        "h5Resume": $('#h5Resume').val(),
+                        "companyNum": $('#companyNum').val(),
+                        "type": $('#type').val(),
+                        "approvalFlowNodeEntities":data
+                    });
+                console.log(jsonData)
+				$.ajax({
+					type: "post",
+					url: baseUrl + "/approvalConfig/save",
+					headers: {
+                        "Accept": "application/json"
+					},
+                    contentType : "application/json",
+					dataType: 'json',
+					data: jsonData,
+					success: function(data) {
+						console.log(data)
+                        window.location.href=document.referrer;
+					},
+					error: function(error) {
+						layui.msg(error.msg);
+					}
+				})
+			})
+		</script>
+	</body>
+
+</html>

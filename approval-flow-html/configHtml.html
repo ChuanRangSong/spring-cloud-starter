@@ -1,0 +1,175 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="layui/jquery.min.js"></script>
+    <title>测试页面</title>
+</head>
+<style>
+    key {
+        display: inline-block;
+        width: 30%;
+    }
+
+    val {
+        display: inline-block;
+        width: auto;
+    }
+
+    #formData div {
+        border-bottom: solid 1px;
+        padding-bottom: 5px;
+        padding-top: 5px;
+    }
+</style>
+<body onload="initContent()">
+<form>
+    <div id="formData">
+        <div>
+            <key>时间选择</key>
+            <val><input viewType="dateInput" name="checkDate" type="text" value="2018-09-11" style="display: none;"><a>2018-09-11</a></val>
+        </div>
+        <div>
+            <key>时间区间选择</key>
+            <val><input viewType="dateInput" name="checkDate" type="text" value="2018-09-11" style="display: none;"><a>2018-09-11</a></val>
+            <br>
+            <key>时间区间选择</key>
+            <val><input viewType="dateInput" name="checkDate" type="text" value="2018-09-11" style="display: none;"><a>2018-09-11</a></val>
+        </div>
+        <div>
+            <key>固定选项数据</key>
+            <val>
+                <select viewType="selectData" name="checkStage" dataSource="1" dataVal='[{"key":"key1","val":"1"},{"key":"key2","val":"2"},{"key":"key3","val":"3"}]'>
+                </select>
+            </val>
+        </div>
+        <div>
+            <key>网络获取选项数据</key>
+            <val>
+                <select viewType="selectData" name="checkStage1" dataSource="2" dataVal='http://localhost:8080/test' paramsExplain='[{"key":"projectNo","source":"URL","urlKey":"projectNo"}]'>
+                </select>
+            </val>
+        </div>
+        <div>
+            <key>多级联动选择[1]</key>
+            <val>
+                <select viewType="linkage" level="1" name="checkStage2" dataSource="2" dataVal='http://localhost:8080/test' onchange="linkage(this)">
+                </select>
+            </val>
+            <br>
+            <key>多级联动选择[2]</key>
+            <val>
+                <select viewType="linkage" level="2" name="checkStage3" dataSource="2" dataVal='http://localhost:8080/test' onchange="linkage(this)" paramsExplain='[{"key":"projectNo","source":"URL","urlKey":"projectNo"},{"key":"searchKey","source":"PARAMS"},{"key":"fixedValue","source":"FIXED","value":"0"}]'>
+                </select>
+            </val>
+            <br>
+            <key>多级联动选择[3]</key>
+            <val>
+                <select viewType="linkage" level="3" name="checkStage4" dataSource="2" dataVal='http://localhost:8080/test' onchange="linkage(this)" paramsExplain='[{"key":"projectNo","source":"URL","urlKey":"projectNo"},{"key":"searchKey","source":"PARAMS"},{"key":"fixedValue","source":"FIXED","value":"0"}]'>
+                </select>
+            </val>
+            <br>
+            <key>多级联动选择[4]</key>
+            <val>
+                <select viewType="linkage" level="4" name="checkStage4" dataSource="2" dataVal='http://localhost:8080/test' paramsExplain='[{"key":"projectNo","source":"URL","urlKey":"projectNo"},{"key":"searchKey","source":"PARAMS"},{"key":"fixedValue","source":"FIXED","value":"0"}]'>
+                </select>
+            </val>
+        </div>
+        <div>
+            <key>上传图片</key>
+            <val>
+                <button viewType="addPhoto">添加图片</button>
+                <input name="photos" value="1"><input name="photos" value="2"><input name="photos" value="3">
+            </val>
+        </div>
+        <div>
+            <textarea viewType="textarea" style="width: 100%" required="required" placeholder="多行输入文本框" rows="5" name="content"></textarea>
+        </div>
+    </div>
+</form>
+<script>
+    function initContent() {
+        $.each($("select[viewType=selectData]"), function (index, obj) {
+            setData(obj);
+        })
+        $.each($("select[viewType=linkage]"), function (index, obj) {
+            if ($(obj).attr("level") == "1") {
+                setData(obj);
+                linkage(obj);
+            }
+        })
+        $("form").serialize();
+    }
+
+    function linkage(viewObj) {
+        var val = $(viewObj).val();
+        var level = parseInt($(viewObj).attr("level")) + 1;
+        var obj = $(viewObj).parents("div").find("select[level=" + level + "]").get(0);
+        if(obj == null){
+            return;
+        }
+        setData(obj, val);
+        linkage(obj);
+    }
+
+    function setData(viewObj, params) {
+        $(viewObj).empty();
+        var dataSource = $(viewObj).attr("dataSource");
+        if (dataSource == 1) {//获取dataVal的json
+            var dataJson = JSON.parse($(viewObj).attr("dataVal"));
+            $.each(dataJson, function (i, json) {
+                $(viewObj).append("<option value='" + json.val + "'>" + json.key + "</option>");
+            });
+        } else {
+            var paramsExplain = $(viewObj).attr("paramsExplain");
+            var url = $(viewObj).attr("dataVal") + paramsStr(paramsExplain,params);
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                success: function (data) {
+                    if (data.code == 1000) {
+                        $.each(data.data, function (i, json) {
+                            $(viewObj).append("<option value='" + json.val + "'>" + json.key + "</option>");
+                        });
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+
+    function paramsStr(paramsExplain, params) {
+        if(paramsExplain == null || paramsExplain.length <= 0){
+            return "";
+        }
+        var paramsJson = JSON.parse(paramsExplain);
+        var paramsStr = "?";
+        $.each(paramsJson, function (index, obj) {
+            var source = obj.source;
+            if (paramsStr.substr(paramsStr.length - 1, 1) != "?" && paramsStr.substr(paramsStr.length - 1, 1) != "&") {
+                paramsStr = paramsStr + "&";
+            }
+            if (source == "URL") {
+                paramsStr = paramsStr + obj.key + "=" + GetQueryString(obj.urlKey);
+            } else if (source == "PARAMS") {
+                paramsStr = paramsStr + obj.key + "=" + params;
+            } else if (source == "FIXED") {
+                paramsStr = paramsStr + obj.key + "=" + obj.value;
+            }
+        });
+        return paramsStr;
+    }
+
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+</script>
+</body>
+</html>

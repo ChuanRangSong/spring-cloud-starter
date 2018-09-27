@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>详情页面</title>
+	<link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<style>
+
+	.childDiv,
+	.msg-div,
+	.exe-div {
+		display: inline-block;
+	}
+
+	.send-msg-role,
+	.exe-role,
+	.add-option,
+	.recommended-role {
+		display: inline-block;
+	}
+
+	.send-msg-role,
+	.exe-role,
+	.add-option,
+	.recommended-role {
+		width: auto;
+	}
+</style>
+<body class="layui-layout-body" style="overflow: auto" onload="onLoad()">
+<div style="padding: 10px;margin-bottom: 50px;" align="center">
+	<table id="titleTable" class="layui-table layui-form" style="width: 600px">
+		<tr>
+			<td>审批流名称</td>
+			<td id=""> <input type="text" name="shipimingcheng" id="approvalFlowName" value="" class="layui-input" /></td>
+		</tr>
+		<tr>
+			<td>审批流版本</td>
+			<td id="approvalFlowVersion"></td>
+		</tr>
+		<tr>
+			<td>审批流编号</td>
+			<td id="approvalFlowNum"></td>
+		</tr>
+		<tr>
+			<td>h5链接描述</td>
+			<td> <input type="text" name="" id="h5Resume" value="" class="layui-input"/></td>
+		</tr>
+		<tr>
+			<td>h5链接地址</td>
+			<td> <input type="text" name="" id="h5Link" value=""  class="layui-input"/></td>
+		</tr>
+		<tr>
+			<td>公司编号</td>
+			<td><input type="text" name="" id="companyNum" value=""  class="layui-input"/></td>
+		</tr>
+		<tr>
+			<td>审批流类型</td>
+			<td>
+				<select id="type">
+					<option value="1">h5</option>
+					<option value="2">原生</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<table class="layui-table layui-form" id="nodeTable">
+		<colgroup>
+		</colgroup>
+		<thead>
+		<tr>
+			<th nowrap="nowrap"><b>审批流序号</b></th>
+			<th nowrap="nowrap"><b>建议角色</b></th>
+			<th nowrap="nowrap"><b>流程节点</b></th>
+			<th nowrap="nowrap"><b>操作项</b></th>
+			<th nowrap="nowrap"><b>是否允许委托</b></th>
+			<th nowrap="nowrap"><b>接收消息角色</b></th>
+			<th nowrap="nowrap"><b>触发方式</b></th>
+			<th nowrap="nowrap"><b>发送审批提醒</b></th>
+			<th nowrap="nowrap"><b>表单配置</b></th>
+			<th nowrap="nowrap"><b>发送消息内容</b></th>
+			<th nowrap="nowrap"><b>订阅消息地址</b></th>
+			<th nowrap="nowrap"><b>节点描述</b></th>
+			<th nowrap="nowrap"><b>操作</b></th>
+		</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+	<button class="layui-btn add-option1">添加一行</button>
+	<button class="layui-btn" id="fasong" style="width: 200px;">保存</button>
+</div>
+<div id="nodeDetailDiv" class="layui-form" style="display: none;">
+	<table class="layui-table" id="editTable">
+		<tr>
+			<td>审批流序号：</td>
+			<td><input type="text" placeholder="审批流序号" value="1" class="layui-input"></td>
+		</tr>
+		<tr>
+			<td>建议角色：</td>
+			<td><div id="roleCheckboxDiv"></div></td>
+		</tr>
+		<tr>
+			<td>流程节点名称：</td>
+			<td><input type="text" name="des" placeholder="流程节点名称" class="layui-input"></td>
+		</tr>
+		<tr>
+			<td>操作项：<a class="layui-btn layui-btn-xs">新增</a></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>是否需要委托：</td>
+			<td>
+				<select id="weituo" name="return-reason" lay-filter="weituo">
+					<option value="1">否</option>
+					<option value="0">是</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>接受消息的角色：</td>
+			<td><div id="receiveMsgRoleCheckboxDiv"></div></td>
+		</tr>
+		<tr>
+			<td>触发：</td>
+			<td>
+				<select id="chufa" name="return-reason" lay-filter="chufa">
+					<option value="1">用户触发</option>
+					<option value="0">系统触发</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>发送审批提醒：</td>
+			<td>
+				<select id="fasongtongzhi" name="return-reason" lay-filter="fasongtongzhi">
+					<option value="0">是</option>
+					<option value="1">否</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>配置表达信息：<a class="layui-btn layui-btn-xs">新增</a></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>发送消息内容：</td>
+			<td><input type="text" name="des" placeholder="发送消息内容" class="layui-input"></td>
+		</tr>
+		<tr>
+			<td>订阅消息地址：<a class="layui-btn layui-btn-xs">新增</a></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>节点描述：</td>
+			<td>
+				<input type="text" name="des" placeholder="节点描述" class="layui-input">
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- 操作项 -->
+<div id="addOptionDiv" class="layui-form" style="display: none;height: 90%;">
+	<table class="layui-table">
+		<tr>
+			<td>操作项名称：</td>
+			<td><input type="text" placeholder="操作项名称" class="layui-input" id="option-name"></td>
+		</tr>
+		<tr>
+			<td>排序：</td>
+			<td><input type="number" placeholder="排序" value="1" id="option-sort" class="layui-input"></td>
+		</tr>
+		<tr>
+			<td>操作项描述：</td>
+			<td><input type="text" name="des" placeholder="操作项描述" class="layui-input" id="option-des"></td>
+		</tr>
+		<tr>
+			<td>跳转第几步流程：</td>
+			<td><input type="number" name="returnNum" placeholder="跳转第几步流程" class="layui-input" id="option-backStep"></td>
+		</tr>
+		<tr>
+			<td>是否需要填写说明：</td>
+			<td>
+				<select id="option-shuoming" name="return-reason">
+					<option value="1">是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- 订阅者描述 -->
+<div id="addNoticeUrl" class="layui-form" style="display: none;height: 90%;">
+	<table class="layui-table">
+		<tr>
+			<td>订阅者描述：</td>
+			<td><input type="text" placeholder="订阅者描述" class="layui-input" id="notice-miaoshu"></td>
+		</tr>
+		<tr>
+			<td>url地址：</td>
+			<td><input type="text" placeholder="url地址" class="layui-input" id="notice-url"></td>
+		</tr>
+		<tr>
+			<td>通知第几步的json数据：</td>
+			<td><input type="text" placeholder="通知第几步的数据" class="layui-input" id="notice-sort"></td>
+		</tr>
+		<tr>
+			<td>通知消息key值：</td>
+			<td><input type="text" placeholder="通知消息key值" class="layui-input" id="notice-key"></td>
+		</tr>
+	</table>
+</div>
+
+<!-- 配置表单信息 -->
+<div id="addFormData" class="layui-form" style="display: none;height: 90%;">
+	<table class="layui-table">
+		<tr>
+			<td>表单编码：</td>
+			<td><input type="text" placeholder="表单编码" class="layui-input" id="form-data-code"></td>
+		</tr>
+		<tr>
+			<td>表单说明：</td>
+			<td><input type="text" placeholder="表单说明" class="layui-input" id="form-data-explain"></td>
+		</tr>
+		<tr>
+			<td>是否可编辑：</td>
+			<td>
+				<select id="form-data-isEdit" name="return-reason" lay-filter="form-data-isEdit">
+					<option value="1">可编辑</option>
+					<option value="0">不可编辑</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>数据来源第几步操作：</td>
+			<td><input type="text" placeholder="数据来源第几步操作" class="layui-input" id="form-data-sort"></td>
+		</tr>
+		<tr>
+			<td>是否展示</td>
+			<td>
+				<select id="form-data-isShow">
+					<option value="0">是</option>
+					<option value="1">否</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<table class="layui-table add-form-element-table">
+		<tr class="form-element-title">
+			<td>元素类型</td>
+			<td>序号</td>
+			<td>names</td>
+			<td>keys</td>
+			<td>是否可编辑</td>
+			<td>是否必填</td>
+			<td>是否展示</td>
+			<td>h5片段</td>
+			<td>操作</td>
+		</tr>
+	</table>
+	<a class="add-form-element-btn layui-btn">添加</a>
+</div>
+<!-- 角色信息 -->
+<div id="selectRole" class="layui-form" style="display: none;height: 90%;">
+	<div style="padding: 10px;padding-left: 100px;">
+	</div>
+</div>
+
+<div id="showFormData" style="display: none;">
+	<table class="layui-table form-data-able">
+	</table>
+	<table class="layui-table form-element-table">
+	</table>
+</div>
+<div id="showJsonDiv" style="display: none;">
+	<table class="layui-table">
+
+	</table>
+</div>
+<script src="layui/jquery.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="layui/common.js"></script>
+<script src="js/approvalDetail.js"></script>
+</body>
+</html>
