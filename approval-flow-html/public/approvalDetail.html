@@ -740,7 +740,7 @@
 				title:"确定要删除吗？",
 				area: ['80%', "80%"],
 				content: $("#showFormData"), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-				btn: ['保存', '删除', '取消'],
+				btn: ['删除', '取消'],
 				yes: function(index) {
 					$(thisObj).remove();
 					layer.close(index);
@@ -751,9 +751,9 @@
 	}
 	
 	function assembleH5Paragraph(names, keys, h5Paragraph) {
-		$.each(JSON.parse(names), function(index, name){
-			alert(name)
-		});
+// 		$.each(JSON.parse(names), function(index, name){
+// 			
+// 		});
 	}
     function addEditTableClick() {
         $("#demonstrationBtn1 td .layui-btn").not($(".form-data-a")).unbind("click");
