@@ -20,7 +20,7 @@ public class OrderController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiOperation(value = "根据id查询订单")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.POST})
+    @RequestMapping(value = "findById/{id}", method = {RequestMethod.POST})
     public void findById(@ApiParam(name = "id", type = "path") @PathVariable() int id){
         logger.info("id : {}", id);
     }
