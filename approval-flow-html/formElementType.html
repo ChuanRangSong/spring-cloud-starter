@@ -5,19 +5,13 @@
     <meta charset="UTF-8">
     <title>表单元素类型</title>
     <link rel="stylesheet" href="layui/css/layui.css">
-    <script src="layui/jquery.min.js"></script>
-    <script src="layui/layui.js"></script>
-    <script type="text/javascript" src="layui/common.js"></script>
 </head>
-<style>
-    
-</style>
 <body>
 <div class="layui-form" id="form-element-type-list" style="height: 100%;overflow:hidden !important;">
     <div align="center"><h2>表单元素类型展示</h2></div>
     <table class="layui-table">
         <tr class='form-element-type-title'>
-            <td>类型unique code</td>
+            <td>类型编号</td>
             <td>名称</td>
             <td>h5片段</td>
 			<td>操作</td>
@@ -33,8 +27,8 @@
 	<div style="padding: 10px;padding-left: 100px;">
 		<table class="layui-table">
 			<tr class='form-element-type-title'>
-				<td>类型unique code:</td>
-				<td><input type="text" placeholder="类型unique code" class="layui-input" id="recordUniqueCode" readonly="readonly"></td>
+				<td>类型编号:</td>
+				<td><input type="text" placeholder="类型编号" class="layui-input" id="num" readonly="readonly"></td>
 			</tr>
 			<tr>
 				<td>名称</td>
@@ -69,6 +63,9 @@
 		</table>
 	</div>
 </div>
+<script src="js/jquery.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="js/common.js"></script>
 <script>
     layui.use(['form', 'code'], function () {
         
@@ -82,7 +79,7 @@
 			$.each(data.data, function(index, formElementType){
 				$("#form-element-type-list table tbody").append(
 					"<tr>" +
-					"<td>" + formElementType.recordUniqueCode + "</td>"+
+					"<td>" + formElementType.num + "</td>"+
 					"<td>" + formElementType.name + "</td>"+
 					"<td>"+
 						"<div class='layui-input-block'>"+
@@ -90,8 +87,8 @@
 						'</div>'+
 					'</td>'+
 					"<td>"+
-						"<a class='layui-btn form-element-type-edit-btn' recordUniqueCode='" + formElementType.recordUniqueCode + "'>编辑</a>"+
-						"<a class='layui-btn form-element-type-delete-btn' name='" + formElementType.name + "' recordUniqueCode='" + formElementType.recordUniqueCode + "'>删除</a>"+
+						"<a class='layui-btn form-element-type-edit-btn' num='" + formElementType.num + "'>编辑</a>"+
+						"<a class='layui-btn form-element-type-delete-btn' name='" + formElementType.name + "' num='" + formElementType.num + "'>删除</a>"+
 					"</td>" +
 					"</tr>"
 				);
@@ -101,12 +98,12 @@
 			$(".form-element-type-edit-btn").click(function(){
 				$.ajax({
 					type: "post",
-					url: baseUrl + "/approvalFormElementType/findByUniqueCode",
+					url: baseUrl + "/approvalFormElementType/findByNum",
 					dataType: "json",
-					data:{"recordUniqueCode":$(this).attr("recordUniqueCode")},
+					data:{"num":$(this).attr("num")},
 					success: function(data) {
 						var formElementType = data.data;
-						$("#recordUniqueCode").val(formElementType.recordUniqueCode);
+						$("#num").val(formElementType.num);
 						$("#name").val(formElementType.name);
 						$("#h5Paragraph").val(formElementType.h5Paragraph);
 						layer.open({
@@ -120,7 +117,7 @@
 										type: "post",
 										url: baseUrl + "/approvalFormElementType/edit",
 										dataType: "json",
-										data:{"recordUniqueCode":$("#recordUniqueCode").val(), "name":$("#name").val(), "h5Paragraph":$("#h5Paragraph").val()},
+										data:{"num":$("#num").val(), "name":$("#name").val(), "h5Paragraph":$("#h5Paragraph").val()},
 										success: function(data) {
 											window.location.reload();
 										}
@@ -133,7 +130,7 @@
 			});
 			$(".form-element-type-delete-btn").unbind("click");
 			$(".form-element-type-delete-btn").click(function(){
-				var recordUniqueCode = $(this).attr("recordUniqueCode");
+				var num = $(this).attr("num");
 				layer.open({
 					type: 1,
 					title:"提示",
@@ -146,7 +143,7 @@
 								type: "post",
 								url: baseUrl + "/approvalFormElementType/delete",
 								dataType: "json",
-								data:{"recordUniqueCode":recordUniqueCode},
+								data:{"num":num},
 								success: function(data) {
 									window.location.reload();
 								}

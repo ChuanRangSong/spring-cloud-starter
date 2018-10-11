@@ -1,4 +1,4 @@
-var baseUrl = "http://localhost:5000/approvalapi";
+var baseUrl = "http://localhost:7181";
 var defWidth = 1200 + "px";
 var defHeight = 674 + "px";
 $(document).ready(function(){

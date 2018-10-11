@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script type="text/javascript" src="layui/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
     <title>测试页面</title>
     <link rel="stylesheet" href="layui/css/layui.css">
 </head>
@@ -33,23 +33,33 @@
     </tbody>
 </table>
 <script src="layui/layui.js"></script>
-<script type="text/javascript" src="layui/common.js"></script>
+<script src="js/common.js"></script>
 <script>
     //http://47.94.212.199:5000/approvalapi/approvalConfig/list
     function initContent() {
         var loadIndex = layer.load(1);
         $.ajax({
             type: "post",
-            url: baseUrl + "/approvalConfig/list",
+            url: baseUrl + "/approvalFlowConfig/list",
             dataType: "json",
             success: function (data) {
                 $.each(data.data, function (index, obj) {
-                    $("table tbody").append("<tr><td>" + (index + 1) + "</td><td>" + obj.approvalFlowNum + "</td><td>" + obj.approvalFlowName + "</td>" +
-						"<td>" + obj.companyNum + "</td>" +
-                        "<td class='date'>" + formatDateTime(obj.createTime) + "</td><td>" + obj.createUserId + "</td><td>" + obj.version + "</td>" +
-                        "<td><a class='layui-btn' href='approvalDetail.html?approvalFlowNum=" + obj.approvalFlowNum + "'>编辑</a>" +
-                        "<a class='layui-btn' href='approvalDetail.html?approvalFlowNum=" + obj.approvalFlowNum + "'>查看</a>" +
-                        "<a class='layui-btn' onclick='deleteApproval(\"" + obj.approvalFlowNum + "\")'>删除</a></td></tr>");
+					var companyId = obj.companyNum != null ? obj.companyNum : "";
+                    $("table tbody").append(
+						"<tr>" +
+							"<td>" + (index + 1) + "</td>" +
+							"<td>" + obj.approvalFlowNum + "</td>" +
+							"<td>" + obj.approvalFlowName + "</td>" +
+							"<td>" + companyId + "</td>" +
+							"<td class='date'>" + formatDateTime(obj.createTime) + "</td>" +
+							"<td>" + obj.createUserId + "</td>" +
+							"<td>" + obj.version + "</td>" +
+							"<td>" +
+								"<a class='layui-btn' href='approvalDetail.html?approvalFlowNum=" + obj.approvalFlowNum + "'>编辑</a>" +
+								"<a class='layui-btn' href='approvalDetail.html?approvalFlowNum=" + obj.approvalFlowNum + "'>查看</a>" +
+								"<a class='layui-btn' onclick='deleteApproval(\"" + obj.approvalFlowNum + "\")'>删除</a>" +
+							"</td>" +
+						"</tr>");
                 })
                 layer.close(loadIndex);
             }, error: function (error) {
@@ -66,7 +76,7 @@
             }, function () {
                 $.ajax({
                     type: "post",
-                    url: baseUrl + "/approvalConfig/del",
+                    url: baseUrl + "/approvalFlowConfig/del",
                     data: {
                         "approvalCode": approvalFlowNum
                     },
