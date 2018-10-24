@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("order")
 public class OrderController {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @ApiOperation(value = "根据id查询订单")
     @RequestMapping(value = "findById/{id}", method = {RequestMethod.POST})
-    public void findById(@ApiParam(name = "id", type = "path") @PathVariable() int id){
+    public void findById(@ApiParam(name = "id", type = "path", required = true) @PathVariable() int id){
         logger.info("id : {}", id);
     }
 }
